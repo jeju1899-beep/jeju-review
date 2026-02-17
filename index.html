@@ -1,669 +1,341 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/index.html b/index.html
-index de83a8ccc6c5c28b2c6cbfd3b5579de5c3dc637c..9d267fab26c4ad816adef70d9ef023ca901ba092 100644
---- a/index.html
-+++ b/index.html
-@@ -1,318 +1,341 @@
--<!doctype html>
--<html lang="zh-CN">
--<head>
--<meta charset="utf-8"/>
--<meta name="viewport" content="width=device-width, initial-scale=1"/>
--<title>韩国公开评论摘要</title>
--
--<style>
--:root{
--  --bg:#fff7fb;
--  --text:#111827;
--  --muted:#6b7280;
--  --line:rgba(17,24,39,.10);
--  --shadow:0 10px 26px rgba(17,24,39,.08);
--  --radius:20px;
--  --accent:#ff4d6d;
--}
--*{box-sizing:border-box;}
--body{
--  margin:0;
--  font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans SC","Apple SD Gothic Neo",Arial,sans-serif;
--  background:
--    radial-gradient(1000px 500px at 15% 0%, #ffe3ec 0%, rgba(255,227,236,0) 60%),
--    radial-gradient(900px 480px at 85% 10%, #ffe9d6 0%, rgba(255,233,214,0) 55%),
--    linear-gradient(180deg,var(--bg) 0%,#ffffff 60%,#ffffff 100%);
--  color:var(--text);
--  min-height:100vh;
--}
--.wrap{max-width:520px;margin:0 auto;padding:14px 14px 60px;}
--
--.card{
--  background:rgba(255,255,255,.92);
--  border:1px solid var(--line);
--  border-radius:var(--radius);
--  box-shadow:var(--shadow);
--  padding:14px;
--  backdrop-filter:blur(6px);
--}
--
--/* ===== Topbar ===== */
--.topbar{
--  position:sticky;
--  top:10px;
--  z-index:20;
--  display:flex;
--  gap:10px;
--  align-items:center;
--  margin-bottom:12px;
--}
--.pill{
--  display:inline-flex;
--  align-items:center;
--  gap:8px;
--  padding:10px 12px;
--  border-radius:16px;
--  border:1px solid var(--line);
--  background:#fff;
--  font-weight:900;
--  cursor:pointer;
--}
--.searchWrap{
--  flex:1;
--  display:flex;
--  align-items:center;
--  gap:8px;
--  padding:10px 12px;
--  border-radius:16px;
--  border:1px solid var(--line);
--  background:#fff;
--}
--.searchInput{
--  width:100%;
--  border:none;
--  outline:none;
--  font-weight:800;
--}
--.bell{
--  position:relative;
--  width:44px;height:44px;
--  border-radius:16px;
--  border:1px solid var(--line);
--  background:#fff;
--  display:flex;align-items:center;justify-content:center;
--  cursor:pointer;
--}
--.dot{
--  position:absolute;
--  top:8px;right:8px;
--  width:10px;height:10px;
--  border-radius:999px;
--  background:var(--accent);
--}
--
--/* ===== Hero ===== */
--.heroRow{display:flex;gap:12px;}
--.heroIcon{
--  width:44px;height:44px;
--  border-radius:16px;
--  background:#fff;
--  border:1px solid var(--line);
--  display:flex;align-items:center;justify-content:center;
--  font-size:20px;
--}
--.heroTitle{font-weight:950;font-size:18px;}
--.heroLine{margin-top:6px;font-weight:900;}
--.heroSub{margin-top:6px;color:var(--muted);font-weight:800;font-size:13px;}
--.heroNote{
--  margin-top:10px;
--  display:inline-block;
--  padding:6px 10px;
--  border-radius:14px;
--  border:1px solid var(--line);
--  font-size:12px;
--  font-weight:900;
--  color:var(--muted);
--}
--
--/* ===== Hospital ===== */
--.hCard{margin-top:12px;}
--.hBtn{
--  margin-top:12px;
--  width:100%;
--  padding:12px;
--  border-radius:16px;
--  border:none;
--  background:linear-gradient(180deg,var(--accent),#ff3b63);
--  color:#fff;
--  font-weight:900;
--  cursor:pointer;
--}
--
--/* ===== Carousel ===== */
--.recHeader{
--  display:flex;
--  justify-content:space-between;
--  align-items:center;
--  margin:24px 2px 10px;
--}
--.recAll{
--  padding:8px 12px;
--  border-radius:14px;
--  border:1px solid var(--line);
--  background:#fff;
--  font-weight:900;
--  text-decoration:none;
--  color:inherit;
--  font-size:13px;
--}
--.carousel{
--  display:flex;
--  gap:12px;
--  overflow:auto;
--  scroll-snap-type:x mandatory;
--}
--.recCard{
--  scroll-snap-align:start;
--  flex:0 0 calc((100% - 12px)/1.2);
--  max-width:360px;
--  border-radius:22px;
--  border:1px solid var(--line);
--  background:#fff;
--  box-shadow:var(--shadow);
--  overflow:hidden;
--  text-decoration:none;
--  color:inherit;
--}
--.recTop{padding:14px;}
--.recTitle{font-size:16px;font-weight:900;}
--.recMeta{font-size:12px;color:var(--muted);margin-top:6px;}
--.recThumb{
--  width:100%;
--  aspect-ratio:1/1;
--  background:#f2f2f2;
--}
--.recThumb img{width:100%;height:100%;object-fit:cover;}
--
--/* ===== Bottom Sheet ===== */
--.sheet{
--  position:fixed;inset:0;
--  background:rgba(0,0,0,.35);
--  display:none;
--  align-items:flex-end;
--  justify-content:center;
--}
--.sheetCard{
--  width:min(520px,100%);
--  background:#fff;
--  border-radius:22px;
--  padding:16px;
--}
--.sheetItem{
--  width:100%;
--  padding:12px;
--  margin-bottom:10px;
--  border-radius:16px;
--  border:1px solid var(--line);
--  background:#fff;
--  font-weight:900;
--}
--.sheetClose{
--  width:100%;
--  padding:12px;
--  border-radius:16px;
--  border:none;
--  background:var(--accent);
--  color:#fff;
--  font-weight:900;
--}
--</style>
--</head>
--
--<body>
--<main class="wrap">
--
--<div class="topbar">
--  <button class="pill" id="regionBtn">全部 ▾</button>
--  <div class="searchWrap">
--    🔍 <input id="searchInput" class="searchInput" placeholder="搜索医院"/>
--  </div>
--  <button class="bell" id="bellBtn">🔔<span class="dot" id="bellDot"></span></button>
--</div>
--
--<div class="card">
--  <div class="heroRow">
--    <div class="heroIcon">🧠</div>
--    <div>
--      <div class="heroTitle">公开评论 · AI 摘要</div>
--      <div class="heroLine">韩国真实就诊评价，一眼就懂</div>
--      <div class="heroSub">基于韩国本地公开评论，由 AI 整理与摘要</div>
--      <div class="heroNote">本服务不提供预约或医疗推荐</div>
--    </div>
--  </div>
--</div>
--
--<div id="hospital-list"></div>
--
--<div class="recHeader">
--  <h2>推荐内容</h2>
--  <a class="recAll" href="contents.html">全部查看</a>
--</div>
--<div class="carousel" id="content-carousel"></div>
--
--</main>
--
--<script>
--const $ = s => document.querySelector(s);
--let ALL_HOSPITALS = [];
--
--function esc(s){return String(s||"");}
--
--async function fetchJson(path){
--  const res = await fetch(path);
--  return await res.json();
--}
--
--function renderHospitals(list){
--  const el = $("#hospital-list");
--  el.innerHTML = "";
--
--  list.forEach(h => {
--    const div = document.createElement("div");
--    div.className = "card hCard";
--    div.style.cursor = "pointer";
--
--    div.innerHTML = `
--      <div class="heroTitle">${esc(h.name_ko || "—")}</div>
--      <div class="heroSub">${esc(h.name_zh || "")}</div>
--      <button class="hBtn" type="button">查看评价摘要</button>
--    `;
--
--    const go = () => {
--      location.href = `hospital.html?id=${encodeURIComponent(h.id)}`;
--    };
--
--    // 카드 클릭해도 이동
--    div.addEventListener("click", go);
--
--    // 버튼 클릭은 카드 클릭 이벤트와 겹치므로 stopPropagation 처리
--    const btn = div.querySelector(".hBtn");
--    btn.addEventListener("click", (e) => {
--      e.stopPropagation();
--      go();
--    });
--
--    el.appendChild(div);
--  });
--}
--
--function renderCarousel(contents){
--  const el=$("#content-carousel");
--  el.innerHTML="";
--  contents.forEach(p=>{
--    const a=document.createElement("a");
--    a.className="recCard";
--    a.href=`post.html?id=${p.id}`;
--    a.innerHTML=`
--      <div class="recTop">
--        <div class="recTitle">${esc(p.title_zh)}</div>
--        <div class="recMeta">${esc(p.published_at)}</div>
--      </div>
--      <div class="recThumb"></div>
--    `;
--    el.appendChild(a);
--  });
--}
--
--(async ()=>{
--  const [hdb,cdb]=await Promise.all([
--    fetchJson("./hospitals.json"),
--    fetchJson("./contents.json")
--  ]);
--  ALL_HOSPITALS=hdb.hospitals||[];
--  renderHospitals(ALL_HOSPITALS);
--  renderCarousel(cdb.contents||[]);
--})();
--</script>
--</body>
--</html>
-\ No newline at end of file
-+<!doctype html>
-+<html lang="zh-CN">
-+<head>
-+<meta charset="utf-8"/>
-+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-+<title>济州公开评论摘要</title>
-+<style>
-+:root{
-+  --bg:#f8f5ef;
-+  --bg-soft:#fffdf8;
-+  --text:#1c1c1e;
-+  --sub:#6e6e73;
-+  --line:rgba(60,60,67,.18);
-+  --line-soft:rgba(60,60,67,.08);
-+  --card:#ffffff;
-+  --tint:#007aff;
-+  --tint-soft:rgba(0,122,255,.1);
-+  --danger:#ff3b30;
-+  --radius-xl:24px;
-+  --shadow-1:0 6px 20px rgba(17,24,39,.06);
-+  --shadow-2:0 12px 28px rgba(17,24,39,.1);
-+}
-+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-+html,body{margin:0;padding:0;}
-+body{
-+  min-height:100vh;
-+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;
-+  color:var(--text);
-+  background:
-+    radial-gradient(1200px 500px at 0% -10%, #fff3dd 0%, rgba(255,243,221,0) 60%),
-+    radial-gradient(900px 420px at 100% 0%, #f2f7ff 0%, rgba(242,247,255,0) 58%),
-+    linear-gradient(180deg,var(--bg) 0%, var(--bg-soft) 100%);
-+}
-+main{max-width:760px;margin:0 auto;padding:14px 14px 42px;}
-+button,input{font:inherit;}
-+.ios-press{transition:transform .16s ease, opacity .16s ease, box-shadow .2s ease;}
-+.ios-press:active{transform:scale(.97);opacity:.9;}
-+
-+.topbar{
-+  position:sticky;top:10px;z-index:50;
-+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;
-+  padding:10px;border-radius:22px;background:rgba(255,255,255,.72);
-+  border:1px solid rgba(255,255,255,.66);
-+  backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
-+  box-shadow:0 6px 26px rgba(15,23,42,.08);transition:all .2s ease;
-+}
-+.pill-btn,.bell-btn{
-+  height:42px;border:none;border-radius:999px;background:#fff;
-+  box-shadow:inset 0 0 0 1px var(--line-soft), 0 2px 8px rgba(17,24,39,.05);
-+  color:var(--text);font-weight:600;cursor:pointer;
-+}
-+.pill-btn{padding:0 14px;white-space:nowrap;transition:all .2s ease;}
-+.search-wrap{
-+  position:relative;height:42px;border-radius:999px;background:#fff;
-+  box-shadow:inset 0 0 0 1px var(--line-soft), 0 2px 8px rgba(17,24,39,.05);
-+  display:flex;align-items:center;padding:0 40px 0 38px;
-+  transition:all .24s ease;
-+}
-+.search-wrap:focus-within{box-shadow:inset 0 0 0 2px rgba(0,122,255,.25), 0 6px 16px rgba(0,122,255,.16);transform:translateY(-1px);}
-+.topbar.searching .pill-btn,.topbar.searching .bell-btn{opacity:0;pointer-events:none;width:0;padding:0;overflow:hidden;}
-+.topbar.searching{grid-template-columns:1fr;}
-+.search-icon{position:absolute;left:14px;color:var(--sub);font-size:14px;}
-+.search-input{width:100%;height:100%;border:none;outline:none;background:transparent;font-size:15px;color:var(--text);}
-+.search-input::placeholder{color:#9a9aa2;}
-+.clear-btn{position:absolute;right:8px;width:26px;height:26px;border:none;border-radius:999px;background:#efeff4;color:#8e8e93;font-size:14px;display:none;align-items:center;justify-content:center;cursor:pointer;}
-+.clear-btn.show{display:flex;}
-+.bell-btn{position:relative;width:42px;padding:0;}
-+.bell-dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:999px;background:var(--danger);display:none;}
-+.bell-dot.show{display:block;}
-+
-+.hero{margin-top:14px;padding:28px 18px 16px;border-radius:24px;background:rgba(255,255,255,.88);border:1px solid var(--line-soft);box-shadow:var(--shadow-1);text-align:center;}
-+.hero-logo{width:66px;height:66px;margin:0 auto 14px;border-radius:20px;background:linear-gradient(160deg,#e8f2ff 0%,#fff0e2 100%);display:grid;place-items:center;font-size:30px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7), 0 8px 16px rgba(20,35,80,.08);}
-+.hero h1{margin:0;font-size:24px;font-weight:750;letter-spacing:-.02em;}
-+.hero p{margin:8px auto 0;color:var(--sub);font-size:14px;line-height:1.5;max-width:520px;}
-+.hero-divider{margin:15px auto 0;width:76%;height:1px;background:linear-gradient(90deg,rgba(0,0,0,0),var(--line),rgba(0,0,0,0));}
-+.section-title{margin:26px 2px 12px;font-size:22px;font-weight:730;letter-spacing:-.02em;}
-+.list{display:flex;flex-direction:column;gap:12px;}
-+.h-card{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:12px;padding:14px;border-radius:22px;background:var(--card);border:1px solid var(--line-soft);box-shadow:var(--shadow-1);text-decoration:none;color:inherit;cursor:pointer;transition:box-shadow .22s ease, transform .16s ease;}
-+.h-card:hover{box-shadow:var(--shadow-2);} 
-+.h-logo{width:56px;height:56px;border-radius:999px;overflow:hidden;background:#f2f2f7;border:1px solid rgba(0,0,0,.06);display:grid;place-items:center;color:#9a9aa2;font-size:12px;font-weight:600;}
-+.h-logo img{width:100%;height:100%;object-fit:cover;}
-+.h-name-ko{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:0;}
-+.h-name-zh{font-size:13px;color:var(--sub);margin:4px 0 0;}
-+.row-meta{display:flex;align-items:center;gap:8px;margin-top:6px;}
-+.region-badge{padding:6px 10px;border-radius:999px;background:var(--tint-soft);color:var(--tint);font-size:12px;font-weight:650;white-space:nowrap;}
-+.fav-dot{font-size:12px;color:#f59e0b;display:none;}
-+.fav-dot.show{display:inline;}
-+.status-card{border-radius:20px;background:rgba(255,255,255,.88);border:1px solid var(--line-soft);box-shadow:var(--shadow-1);padding:18px;text-align:center;}
-+.status-title{font-size:17px;font-weight:700;margin:0 0 6px;}
-+.status-sub{font-size:13px;color:var(--sub);margin:0;line-height:1.45;}
-+.content-head{display:flex;align-items:center;justify-content:space-between;margin:28px 2px 12px;}
-+.content-head h2{margin:0;font-size:22px;font-weight:730;letter-spacing:-.02em;}
-+.all-link{text-decoration:none;color:var(--tint);font-size:14px;font-weight:650;padding:6px 10px;border-radius:999px;background:rgba(0,122,255,.08);}
-+.carousel{display:flex;gap:12px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:2px;}
-+.carousel::-webkit-scrollbar{display:none;}
-+.c-card{flex:0 0 calc((100% - 12px) / 1.2);max-width:420px;scroll-snap-align:start;border-radius:22px;overflow:hidden;border:1px solid var(--line-soft);background:#fff;box-shadow:var(--shadow-1);text-decoration:none;color:inherit;}
-+.c-thumb{width:100%;aspect-ratio:1/1;background:linear-gradient(160deg,#eef4ff 0%, #f7f7f8 100%);display:grid;place-items:center;color:#9a9aa2;font-size:13px;}
-+.c-thumb img{width:100%;height:100%;object-fit:cover;}
-+.c-body{padding:12px 14px 15px;}
-+.c-title{margin:0;font-size:16px;font-weight:700;line-height:1.35;}
-+.c-date{margin:6px 0 0;font-size:12px;color:var(--sub);}
-+.sheet{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .2s ease;}
-+.sheet.show{opacity:1;pointer-events:auto;}
-+.sheet-panel{position:absolute;left:0;right:0;bottom:0;margin:0 auto;max-width:760px;background:#fff;border-radius:24px 24px 0 0;padding:10px 14px calc(14px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .24s ease;box-shadow:0 -8px 28px rgba(17,24,39,.18);}
-+.sheet.show .sheet-panel{transform:translateY(0);}
-+.grabber{width:42px;height:5px;border-radius:999px;background:#d2d2d7;margin:6px auto 12px;}
-+.sheet-btn{width:100%;border:none;background:#fff;border-radius:14px;padding:12px;font-size:16px;font-weight:550;color:var(--text);text-align:left;box-shadow:inset 0 0 0 1px var(--line-soft);margin-bottom:8px;}
-+.sheet-btn.active{background:var(--tint-soft);color:var(--tint);box-shadow:none;}
-+.sheet-close{margin-top:4px;width:100%;border:none;border-radius:14px;padding:12px;font-size:16px;font-weight:700;color:var(--danger);background:#f2f2f7;}
-+
-+.alert-panel{position:fixed;top:66px;right:14px;z-index:90;width:min(340px,92vw);background:rgba(255,255,255,.94);border:1px solid var(--line-soft);box-shadow:var(--shadow-2);border-radius:16px;padding:10px;display:none;}
-+.alert-panel.show{display:block;}
-+.alert-title{font-size:14px;font-weight:700;margin:4px 4px 8px;}
-+.alert-item{padding:10px;border-radius:12px;background:#f8fafc;font-size:13px;margin-bottom:8px;color:#334155;}
-+.alert-empty{padding:12px;color:var(--sub);font-size:13px;text-align:center;}
-+
-+@media (max-width:520px){main{padding:12px 12px 30px;}.hero h1{font-size:22px;}}
-+</style>
-+</head>
-+<body>
-+<main>
-+  <header class="topbar" id="topbar">
-+    <button id="regionBtn" class="pill-btn ios-press" type="button">全部地区 ▾</button>
-+    <div class="search-wrap">
-+      <span class="search-icon">🔍</span>
-+      <input id="searchInput" class="search-input" type="text" placeholder="搜索医院、地区、地址" autocomplete="off"/>
-+      <button id="clearSearchBtn" class="clear-btn ios-press" type="button" aria-label="清空搜索">✕</button>
-+    </div>
-+    <button id="bellBtn" class="bell-btn ios-press" type="button" aria-label="通知">
-+      🔔
-+      <span class="bell-dot" id="bellDot" aria-hidden="true"></span>
-+    </button>
-+  </header>
-+
-+  <div class="alert-panel" id="alertPanel">
-+    <div class="alert-title">最近提醒</div>
-+    <div id="alertList"></div>
-+  </div>
-+
-+  <section class="hero">
-+    <div class="hero-logo">🩺</div>
-+    <h1>济州病院公开评论摘要</h1>
-+    <p>基于韩国公开平台评论，通过结构化方式快速查看医院口碑趋势。内容仅供信息参考，不构成医疗建议。</p>
-+    <div class="hero-divider"></div>
-+  </section>
-+
-+  <h2 class="section-title">医院列表</h2>
-+  <section id="hospitalList" class="list" aria-live="polite"></section>
-+
-+  <div class="content-head">
-+    <h2>推荐内容</h2>
-+    <a href="contents.html" class="all-link ios-press">查看全部</a>
-+  </div>
-+  <section id="contentCarousel" class="carousel"></section>
-+</main>
-+
-+<div id="regionSheet" class="sheet" aria-hidden="true">
-+  <div class="sheet-panel">
-+    <div class="grabber" aria-hidden="true"></div>
-+    <div id="regionOptions"></div>
-+    <button id="closeSheetBtn" class="sheet-close ios-press" type="button">关闭</button>
-+  </div>
-+</div>
-+
-+<script>
-+const $ = (s) => document.querySelector(s);
-+const LS_KEYS = { favorites: "jj_favorites", alerts: "jj_alerts", seen: "jj_alerts_seen" };
-+const hospitalListEl = $("#hospitalList");
-+const contentCarouselEl = $("#contentCarousel");
-+const searchInputEl = $("#searchInput");
-+const clearSearchBtnEl = $("#clearSearchBtn");
-+const regionBtnEl = $("#regionBtn");
-+const regionSheetEl = $("#regionSheet");
-+const regionOptionsEl = $("#regionOptions");
-+const bellBtnEl = $("#bellBtn");
-+const bellDotEl = $("#bellDot");
-+const alertPanelEl = $("#alertPanel");
-+const alertListEl = $("#alertList");
-+const topbarEl = $("#topbar");
-+
-+const REGION_LABELS = { all: "全部地区", "jeju-city": "济州市", seogwipo: "西归浦市", unknown: "未分类地区" };
-+const PLACEHOLDER_LOGO = `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' fill='#eef2ff'/><circle cx='60' cy='46' r='16' fill='#c7d2fe'/><rect x='30' y='72' width='60' height='10' rx='5' fill='#cbd5e1'/></svg>`)}`;
-+const PLACEHOLDER_THUMB = `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='#eef4ff'/><rect x='62' y='80' width='276' height='200' rx='18' fill='#dbeafe'/><rect x='95' y='296' width='210' height='18' rx='9' fill='#cbd5e1'/></svg>`)}`;
-+
-+let allHospitals = [];
-+let allContents = [];
-+let selectedRegion = "all";
-+let keyword = "";
-+
-+const safeStr = (v) => String(v ?? "").trim();
-+const safeArr = (v) => Array.isArray(v) ? v : [];
-+const safeObj = (v) => v && typeof v === "object" ? v : {};
-+function esc(v){return String(v ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");}
-+const readLS = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || JSON.stringify(d)); } catch { return d; } };
-+const writeLS = (k, v) => localStorage.setItem(k, JSON.stringify(v));
-+const getFavorites = () => new Set(readLS(LS_KEYS.favorites, []));
-+const getAlerts = () => readLS(LS_KEYS.alerts, []);
-+
-+function regionLabel(region){ return REGION_LABELS[region] || region || "未分类地区"; }
-+function setImageWithFallback(img, src, fallback){ img.src = src || fallback; img.onerror = () => { img.onerror = null; img.src = fallback; }; }
-+
-+function normalizeHospital(raw, idx){
-+  const h = safeObj(raw); const assets = safeObj(h.assets);
-+  const id = safeStr(h.id) || `hospital-${idx+1}`;
-+  const ko = safeStr(h.name_ko) || "未命名医院";
-+  const zh = safeStr(h.name_zh) || "暂无中文名称";
-+  return { id, region: safeStr(h.region)||"unknown", name_ko: ko, name_zh: zh, logo: safeStr(assets.logo), searchText: `${ko} ${zh} ${safeStr(h.address_ko)} ${safeStr(h.address_zh)} ${safeStr(h.region)}`.toLowerCase() };
-+}
-+function normalizeContent(raw, idx){ const c = safeObj(raw); return { id: safeStr(c.id)||`content-${idx+1}`, title: safeStr(c.title_zh)||"未命名内容", date: safeStr(c.published_at)||"日期待更新", thumb: safeStr(c.thumbnail||c.thumb||c.image||"") }; }
-+
-+function renderBell(){
-+  const alerts = getAlerts();
-+  const seen = Number(localStorage.getItem(LS_KEYS.seen) || 0);
-+  bellDotEl.classList.toggle("show", alerts.length > seen);
-+}
-+
-+function renderAlertsPanel(){
-+  const alerts = getAlerts().slice().reverse().slice(0,8);
-+  alertListEl.innerHTML = alerts.length ? alerts.map(a => `<div class="alert-item">${esc(a.message || "有新的动态")}</div>`).join("") : `<div class="alert-empty">暂无新提醒</div>`;
-+}
-+
-+function renderHospitalList(){
-+  const favs = getFavorites();
-+  const q = keyword.toLowerCase().trim();
-+  const filtered = allHospitals.filter((h) => (selectedRegion === "all" || h.region === selectedRegion) && (!q || h.searchText.includes(q)));
-+  hospitalListEl.innerHTML = "";
-+  if (!filtered.length) {
-+    hospitalListEl.innerHTML = `<article class="status-card"><p class="status-title">没有找到匹配医院</p><p class="status-sub">请尝试更换地区或调整关键词。</p></article>`;
-+    return;
-+  }
-+  const fragment = document.createDocumentFragment();
-+  filtered.forEach((h) => {
-+    const card = document.createElement("article");
-+    card.className = "h-card ios-press";
-+    card.setAttribute("role", "link");
-+    card.setAttribute("tabindex", "0");
-+    card.innerHTML = `
-+      <div class="h-logo"><img alt="${esc(h.name_zh)} 标志"/></div>
-+      <div>
-+        <p class="h-name-ko">${esc(h.name_ko)}</p>
-+        <p class="h-name-zh">${esc(h.name_zh)}</p>
-+        <div class="row-meta">
-+          <span class="region-badge">${esc(regionLabel(h.region))}</span>
-+          <span class="fav-dot ${favs.has(h.id) ? "show" : ""}">★ 已收藏</span>
-+        </div>
-+      </div>
-+      <span style="color:#94a3b8;">›</span>
-+    `;
-+    setImageWithFallback(card.querySelector("img"), h.logo, PLACEHOLDER_LOGO);
-+    const go = () => { location.href = `hospital.html?id=${encodeURIComponent(h.id)}`; };
-+    card.addEventListener("click", go);
-+    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
-+    fragment.appendChild(card);
-+  });
-+  hospitalListEl.appendChild(fragment);
-+}
-+
-+function renderContentCarousel(){
-+  contentCarouselEl.innerHTML = "";
-+  if (!allContents.length) {
-+    contentCarouselEl.innerHTML = `<article class="status-card" style="min-width:100%;"><p class="status-title">暂无推荐内容</p><p class="status-sub">稍后更新。</p></article>`;
-+    return;
-+  }
-+  const fragment = document.createDocumentFragment();
-+  allContents.forEach((c) => {
-+    const card = document.createElement("a");
-+    card.className = "c-card ios-press";
-+    card.href = `post.html?id=${encodeURIComponent(c.id)}`;
-+    card.innerHTML = `<div class="c-thumb"><img alt="${esc(c.title)} 缩略图"/></div><div class="c-body"><p class="c-title">${esc(c.title)}</p><p class="c-date">${esc(c.date)}</p></div>`;
-+    setImageWithFallback(card.querySelector("img"), c.thumb, PLACEHOLDER_THUMB);
-+    fragment.appendChild(card);
-+  });
-+  contentCarouselEl.appendChild(fragment);
-+}
-+
-+function renderRegionOptions(){
-+  const options = ["all", ...Array.from(new Set(allHospitals.map((h) => h.region).filter(Boolean)))];
-+  regionOptionsEl.innerHTML = "";
-+  options.forEach((regionKey) => {
-+    const btn = document.createElement("button");
-+    btn.type = "button";
-+    btn.className = `sheet-btn ios-press${selectedRegion === regionKey ? " active" : ""}`;
-+    btn.textContent = regionLabel(regionKey);
-+    btn.addEventListener("click", () => { selectedRegion = regionKey; regionBtnEl.textContent = `${regionLabel(regionKey)} ▾`; closeSheet(); renderRegionOptions(); renderHospitalList(); });
-+    regionOptionsEl.appendChild(btn);
-+  });
-+}
-+
-+const openSheet = () => { regionSheetEl.classList.add("show"); regionSheetEl.setAttribute("aria-hidden", "false"); };
-+const closeSheet = () => { regionSheetEl.classList.remove("show"); regionSheetEl.setAttribute("aria-hidden", "true"); };
-+function setLoading(){ hospitalListEl.innerHTML = `<article class="status-card"><p class="status-title">正在加载医院数据…</p><p class="status-sub">请稍候。</p></article>`; contentCarouselEl.innerHTML = `<article class="status-card" style="min-width:100%;"><p class="status-title">正在加载推荐内容…</p></article>`; }
-+function setLoadError(message){ hospitalListEl.innerHTML = `<article class="status-card"><p class="status-title">数据加载失败</p><p class="status-sub">${esc(message || "请刷新重试")}</p></article>`; }
-+async function fetchJson(path){ const res = await fetch(path); if (!res.ok) throw new Error(`${path} 返回状态 ${res.status}`); return await res.json(); }
-+
-+async function init(){
-+  setLoading();
-+  renderBell();
-+  renderAlertsPanel();
-+  try {
-+    const [hdb, cdb] = await Promise.all([ fetchJson("./hospitals.json"), fetchJson("./contents.json") ]);
-+    allHospitals = safeArr(safeObj(hdb).hospitals).map(normalizeHospital);
-+    allContents = safeArr(safeObj(cdb).contents).map(normalizeContent);
-+    renderRegionOptions();
-+    renderHospitalList();
-+    renderContentCarousel();
-+  } catch (err) {
-+    console.error(err);
-+    setLoadError(err.message);
-+  }
-+}
-+
-+searchInputEl.addEventListener("focus", () => { if (window.innerWidth < 560) topbarEl.classList.add("searching"); });
-+searchInputEl.addEventListener("blur", () => { if (!keyword) topbarEl.classList.remove("searching"); });
-+searchInputEl.addEventListener("input", (e) => { keyword = safeStr(e.target.value); clearSearchBtnEl.classList.toggle("show", Boolean(keyword)); renderHospitalList(); });
-+clearSearchBtnEl.addEventListener("click", () => { keyword = ""; searchInputEl.value = ""; clearSearchBtnEl.classList.remove("show"); topbarEl.classList.remove("searching"); searchInputEl.focus(); renderHospitalList(); });
-+
-+bellBtnEl.addEventListener("click", () => {
-+  alertPanelEl.classList.toggle("show");
-+  if (alertPanelEl.classList.contains("show")) {
-+    localStorage.setItem(LS_KEYS.seen, String(getAlerts().length));
-+    renderBell();
-+    renderAlertsPanel();
-+  }
-+});
-+
-+document.addEventListener("click", (e) => {
-+  if (!alertPanelEl.contains(e.target) && e.target !== bellBtnEl && !bellBtnEl.contains(e.target)) {
-+    alertPanelEl.classList.remove("show");
-+  }
-+});
-+
-+regionBtnEl.addEventListener("click", openSheet);
-+$("#closeSheetBtn").addEventListener("click", closeSheet);
-+regionSheetEl.addEventListener("click", (e) => { if (e.target === regionSheetEl) closeSheet(); });
-+document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeSheet(); alertPanelEl.classList.remove("show"); } });
-+
-+window.addEventListener("storage", () => { renderBell(); renderHospitalList(); renderAlertsPanel(); });
-+init();
-+</script>
-+</body>
-+</html>
- 
-EOF
-)
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>济州公开评论摘要</title>
+<style>
+:root{
+  --bg:#f8f5ef;
+  --bg-soft:#fffdf8;
+  --text:#1c1c1e;
+  --sub:#6e6e73;
+  --line:rgba(60,60,67,.18);
+  --line-soft:rgba(60,60,67,.08);
+  --card:#ffffff;
+  --tint:#007aff;
+  --tint-soft:rgba(0,122,255,.1);
+  --danger:#ff3b30;
+  --radius-xl:24px;
+  --shadow-1:0 6px 20px rgba(17,24,39,.06);
+  --shadow-2:0 12px 28px rgba(17,24,39,.1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 500px at 0% -10%, #fff3dd 0%, rgba(255,243,221,0) 60%),
+    radial-gradient(900px 420px at 100% 0%, #f2f7ff 0%, rgba(242,247,255,0) 58%),
+    linear-gradient(180deg,var(--bg) 0%, var(--bg-soft) 100%);
+}
+main{max-width:760px;margin:0 auto;padding:14px 14px 42px;}
+button,input{font:inherit;}
+.ios-press{transition:transform .16s ease, opacity .16s ease, box-shadow .2s ease;}
+.ios-press:active{transform:scale(.97);opacity:.9;}
+
+.topbar{
+  position:sticky;top:10px;z-index:50;
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;
+  padding:10px;border-radius:22px;background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.66);
+  backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
+  box-shadow:0 6px 26px rgba(15,23,42,.08);transition:all .2s ease;
+}
+.pill-btn,.bell-btn{
+  height:42px;border:none;border-radius:999px;background:#fff;
+  box-shadow:inset 0 0 0 1px var(--line-soft), 0 2px 8px rgba(17,24,39,.05);
+  color:var(--text);font-weight:600;cursor:pointer;
+}
+.pill-btn{padding:0 14px;white-space:nowrap;transition:all .2s ease;}
+.search-wrap{
+  position:relative;height:42px;border-radius:999px;background:#fff;
+  box-shadow:inset 0 0 0 1px var(--line-soft), 0 2px 8px rgba(17,24,39,.05);
+  display:flex;align-items:center;padding:0 40px 0 38px;
+  transition:all .24s ease;
+}
+.search-wrap:focus-within{box-shadow:inset 0 0 0 2px rgba(0,122,255,.25), 0 6px 16px rgba(0,122,255,.16);transform:translateY(-1px);}
+.topbar.searching .pill-btn,.topbar.searching .bell-btn{opacity:0;pointer-events:none;width:0;padding:0;overflow:hidden;}
+.topbar.searching{grid-template-columns:1fr;}
+.search-icon{position:absolute;left:14px;color:var(--sub);font-size:14px;}
+.search-input{width:100%;height:100%;border:none;outline:none;background:transparent;font-size:15px;color:var(--text);}
+.search-input::placeholder{color:#9a9aa2;}
+.clear-btn{position:absolute;right:8px;width:26px;height:26px;border:none;border-radius:999px;background:#efeff4;color:#8e8e93;font-size:14px;display:none;align-items:center;justify-content:center;cursor:pointer;}
+.clear-btn.show{display:flex;}
+.bell-btn{position:relative;width:42px;padding:0;}
+.bell-dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:999px;background:var(--danger);display:none;}
+.bell-dot.show{display:block;}
+
+.hero{margin-top:14px;padding:28px 18px 16px;border-radius:24px;background:rgba(255,255,255,.88);border:1px solid var(--line-soft);box-shadow:var(--shadow-1);text-align:center;}
+.hero-logo{width:66px;height:66px;margin:0 auto 14px;border-radius:20px;background:linear-gradient(160deg,#e8f2ff 0%,#fff0e2 100%);display:grid;place-items:center;font-size:30px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7), 0 8px 16px rgba(20,35,80,.08);}
+.hero h1{margin:0;font-size:24px;font-weight:750;letter-spacing:-.02em;}
+.hero p{margin:8px auto 0;color:var(--sub);font-size:14px;line-height:1.5;max-width:520px;}
+.hero-divider{margin:15px auto 0;width:76%;height:1px;background:linear-gradient(90deg,rgba(0,0,0,0),var(--line),rgba(0,0,0,0));}
+.section-title{margin:26px 2px 12px;font-size:22px;font-weight:730;letter-spacing:-.02em;}
+.list{display:flex;flex-direction:column;gap:12px;}
+.h-card{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:12px;padding:14px;border-radius:22px;background:var(--card);border:1px solid var(--line-soft);box-shadow:var(--shadow-1);text-decoration:none;color:inherit;cursor:pointer;transition:box-shadow .22s ease, transform .16s ease;}
+.h-card:hover{box-shadow:var(--shadow-2);} 
+.h-logo{width:56px;height:56px;border-radius:999px;overflow:hidden;background:#f2f2f7;border:1px solid rgba(0,0,0,.06);display:grid;place-items:center;color:#9a9aa2;font-size:12px;font-weight:600;}
+.h-logo img{width:100%;height:100%;object-fit:cover;}
+.h-name-ko{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:0;}
+.h-name-zh{font-size:13px;color:var(--sub);margin:4px 0 0;}
+.row-meta{display:flex;align-items:center;gap:8px;margin-top:6px;}
+.region-badge{padding:6px 10px;border-radius:999px;background:var(--tint-soft);color:var(--tint);font-size:12px;font-weight:650;white-space:nowrap;}
+.fav-dot{font-size:12px;color:#f59e0b;display:none;}
+.fav-dot.show{display:inline;}
+.status-card{border-radius:20px;background:rgba(255,255,255,.88);border:1px solid var(--line-soft);box-shadow:var(--shadow-1);padding:18px;text-align:center;}
+.status-title{font-size:17px;font-weight:700;margin:0 0 6px;}
+.status-sub{font-size:13px;color:var(--sub);margin:0;line-height:1.45;}
+.content-head{display:flex;align-items:center;justify-content:space-between;margin:28px 2px 12px;}
+.content-head h2{margin:0;font-size:22px;font-weight:730;letter-spacing:-.02em;}
+.all-link{text-decoration:none;color:var(--tint);font-size:14px;font-weight:650;padding:6px 10px;border-radius:999px;background:rgba(0,122,255,.08);}
+.carousel{display:flex;gap:12px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:2px;}
+.carousel::-webkit-scrollbar{display:none;}
+.c-card{flex:0 0 calc((100% - 12px) / 1.2);max-width:420px;scroll-snap-align:start;border-radius:22px;overflow:hidden;border:1px solid var(--line-soft);background:#fff;box-shadow:var(--shadow-1);text-decoration:none;color:inherit;}
+.c-thumb{width:100%;aspect-ratio:1/1;background:linear-gradient(160deg,#eef4ff 0%, #f7f7f8 100%);display:grid;place-items:center;color:#9a9aa2;font-size:13px;}
+.c-thumb img{width:100%;height:100%;object-fit:cover;}
+.c-body{padding:12px 14px 15px;}
+.c-title{margin:0;font-size:16px;font-weight:700;line-height:1.35;}
+.c-date{margin:6px 0 0;font-size:12px;color:var(--sub);}
+.sheet{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .2s ease;}
+.sheet.show{opacity:1;pointer-events:auto;}
+.sheet-panel{position:absolute;left:0;right:0;bottom:0;margin:0 auto;max-width:760px;background:#fff;border-radius:24px 24px 0 0;padding:10px 14px calc(14px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .24s ease;box-shadow:0 -8px 28px rgba(17,24,39,.18);}
+.sheet.show .sheet-panel{transform:translateY(0);}
+.grabber{width:42px;height:5px;border-radius:999px;background:#d2d2d7;margin:6px auto 12px;}
+.sheet-btn{width:100%;border:none;background:#fff;border-radius:14px;padding:12px;font-size:16px;font-weight:550;color:var(--text);text-align:left;box-shadow:inset 0 0 0 1px var(--line-soft);margin-bottom:8px;}
+.sheet-btn.active{background:var(--tint-soft);color:var(--tint);box-shadow:none;}
+.sheet-close{margin-top:4px;width:100%;border:none;border-radius:14px;padding:12px;font-size:16px;font-weight:700;color:var(--danger);background:#f2f2f7;}
+
+.alert-panel{position:fixed;top:66px;right:14px;z-index:90;width:min(340px,92vw);background:rgba(255,255,255,.94);border:1px solid var(--line-soft);box-shadow:var(--shadow-2);border-radius:16px;padding:10px;display:none;}
+.alert-panel.show{display:block;}
+.alert-title{font-size:14px;font-weight:700;margin:4px 4px 8px;}
+.alert-item{padding:10px;border-radius:12px;background:#f8fafc;font-size:13px;margin-bottom:8px;color:#334155;}
+.alert-empty{padding:12px;color:var(--sub);font-size:13px;text-align:center;}
+
+@media (max-width:520px){main{padding:12px 12px 30px;}.hero h1{font-size:22px;}}
+</style>
+</head>
+<body>
+<main>
+  <header class="topbar" id="topbar">
+    <button id="regionBtn" class="pill-btn ios-press" type="button">全部地区 ▾</button>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input id="searchInput" class="search-input" type="text" placeholder="搜索医院、地区、地址" autocomplete="off"/>
+      <button id="clearSearchBtn" class="clear-btn ios-press" type="button" aria-label="清空搜索">✕</button>
+    </div>
+    <button id="bellBtn" class="bell-btn ios-press" type="button" aria-label="通知">
+      🔔
+      <span class="bell-dot" id="bellDot" aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <div class="alert-panel" id="alertPanel">
+    <div class="alert-title">最近提醒</div>
+    <div id="alertList"></div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-logo">🩺</div>
+    <h1>济州病院公开评论摘要</h1>
+    <p>基于韩国公开平台评论，通过结构化方式快速查看医院口碑趋势。内容仅供信息参考，不构成医疗建议。</p>
+    <div class="hero-divider"></div>
+  </section>
+
+  <h2 class="section-title">医院列表</h2>
+  <section id="hospitalList" class="list" aria-live="polite"></section>
+
+  <div class="content-head">
+    <h2>推荐内容</h2>
+    <a href="contents.html" class="all-link ios-press">查看全部</a>
+  </div>
+  <section id="contentCarousel" class="carousel"></section>
+</main>
+
+<div id="regionSheet" class="sheet" aria-hidden="true">
+  <div class="sheet-panel">
+    <div class="grabber" aria-hidden="true"></div>
+    <div id="regionOptions"></div>
+    <button id="closeSheetBtn" class="sheet-close ios-press" type="button">关闭</button>
+  </div>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const LS_KEYS = { favorites: "jj_favorites", alerts: "jj_alerts", seen: "jj_alerts_seen" };
+const hospitalListEl = $("#hospitalList");
+const contentCarouselEl = $("#contentCarousel");
+const searchInputEl = $("#searchInput");
+const clearSearchBtnEl = $("#clearSearchBtn");
+const regionBtnEl = $("#regionBtn");
+const regionSheetEl = $("#regionSheet");
+const regionOptionsEl = $("#regionOptions");
+const bellBtnEl = $("#bellBtn");
+const bellDotEl = $("#bellDot");
+const alertPanelEl = $("#alertPanel");
+const alertListEl = $("#alertList");
+const topbarEl = $("#topbar");
+
+const REGION_LABELS = { all: "全部地区", "jeju-city": "济州市", seogwipo: "西归浦市", unknown: "未分类地区" };
+const PLACEHOLDER_LOGO = `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' fill='#eef2ff'/><circle cx='60' cy='46' r='16' fill='#c7d2fe'/><rect x='30' y='72' width='60' height='10' rx='5' fill='#cbd5e1'/></svg>`)}`;
+const PLACEHOLDER_THUMB = `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='#eef4ff'/><rect x='62' y='80' width='276' height='200' rx='18' fill='#dbeafe'/><rect x='95' y='296' width='210' height='18' rx='9' fill='#cbd5e1'/></svg>`)}`;
+
+let allHospitals = [];
+let allContents = [];
+let selectedRegion = "all";
+let keyword = "";
+
+const safeStr = (v) => String(v ?? "").trim();
+const safeArr = (v) => Array.isArray(v) ? v : [];
+const safeObj = (v) => v && typeof v === "object" ? v : {};
+function esc(v){return String(v ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");}
+const readLS = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || JSON.stringify(d)); } catch { return d; } };
+const writeLS = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+const getFavorites = () => new Set(readLS(LS_KEYS.favorites, []));
+const getAlerts = () => readLS(LS_KEYS.alerts, []);
+
+function regionLabel(region){ return REGION_LABELS[region] || region || "未分类地区"; }
+function setImageWithFallback(img, src, fallback){ img.src = src || fallback; img.onerror = () => { img.onerror = null; img.src = fallback; }; }
+
+function normalizeHospital(raw, idx){
+  const h = safeObj(raw); const assets = safeObj(h.assets);
+  const id = safeStr(h.id) || `hospital-${idx+1}`;
+  const ko = safeStr(h.name_ko) || "未命名医院";
+  const zh = safeStr(h.name_zh) || "暂无中文名称";
+  return { id, region: safeStr(h.region)||"unknown", name_ko: ko, name_zh: zh, logo: safeStr(assets.logo), searchText: `${ko} ${zh} ${safeStr(h.address_ko)} ${safeStr(h.address_zh)} ${safeStr(h.region)}`.toLowerCase() };
+}
+function normalizeContent(raw, idx){ const c = safeObj(raw); return { id: safeStr(c.id)||`content-${idx+1}`, title: safeStr(c.title_zh)||"未命名内容", date: safeStr(c.published_at)||"日期待更新", thumb: safeStr(c.thumbnail||c.thumb||c.image||"") }; }
+
+function renderBell(){
+  const alerts = getAlerts();
+  const seen = Number(localStorage.getItem(LS_KEYS.seen) || 0);
+  bellDotEl.classList.toggle("show", alerts.length > seen);
+}
+
+function renderAlertsPanel(){
+  const alerts = getAlerts().slice().reverse().slice(0,8);
+  alertListEl.innerHTML = alerts.length ? alerts.map(a => `<div class="alert-item">${esc(a.message || "有新的动态")}</div>`).join("") : `<div class="alert-empty">暂无新提醒</div>`;
+}
+
+function renderHospitalList(){
+  const favs = getFavorites();
+  const q = keyword.toLowerCase().trim();
+  const filtered = allHospitals.filter((h) => (selectedRegion === "all" || h.region === selectedRegion) && (!q || h.searchText.includes(q)));
+  hospitalListEl.innerHTML = "";
+  if (!filtered.length) {
+    hospitalListEl.innerHTML = `<article class="status-card"><p class="status-title">没有找到匹配医院</p><p class="status-sub">请尝试更换地区或调整关键词。</p></article>`;
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  filtered.forEach((h) => {
+    const card = document.createElement("article");
+    card.className = "h-card ios-press";
+    card.setAttribute("role", "link");
+    card.setAttribute("tabindex", "0");
+    card.innerHTML = `
+      <div class="h-logo"><img alt="${esc(h.name_zh)} 标志"/></div>
+      <div>
+        <p class="h-name-ko">${esc(h.name_ko)}</p>
+        <p class="h-name-zh">${esc(h.name_zh)}</p>
+        <div class="row-meta">
+          <span class="region-badge">${esc(regionLabel(h.region))}</span>
+          <span class="fav-dot ${favs.has(h.id) ? "show" : ""}">★ 已收藏</span>
+        </div>
+      </div>
+      <span style="color:#94a3b8;">›</span>
+    `;
+    setImageWithFallback(card.querySelector("img"), h.logo, PLACEHOLDER_LOGO);
+    const go = () => { location.href = `hospital.html?id=${encodeURIComponent(h.id)}`; };
+    card.addEventListener("click", go);
+    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    fragment.appendChild(card);
+  });
+  hospitalListEl.appendChild(fragment);
+}
+
+function renderContentCarousel(){
+  contentCarouselEl.innerHTML = "";
+  if (!allContents.length) {
+    contentCarouselEl.innerHTML = `<article class="status-card" style="min-width:100%;"><p class="status-title">暂无推荐内容</p><p class="status-sub">稍后更新。</p></article>`;
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  allContents.forEach((c) => {
+    const card = document.createElement("a");
+    card.className = "c-card ios-press";
+    card.href = `post.html?id=${encodeURIComponent(c.id)}`;
+    card.innerHTML = `<div class="c-thumb"><img alt="${esc(c.title)} 缩略图"/></div><div class="c-body"><p class="c-title">${esc(c.title)}</p><p class="c-date">${esc(c.date)}</p></div>`;
+    setImageWithFallback(card.querySelector("img"), c.thumb, PLACEHOLDER_THUMB);
+    fragment.appendChild(card);
+  });
+  contentCarouselEl.appendChild(fragment);
+}
+
+function renderRegionOptions(){
+  const options = ["all", ...Array.from(new Set(allHospitals.map((h) => h.region).filter(Boolean)))];
+  regionOptionsEl.innerHTML = "";
+  options.forEach((regionKey) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = `sheet-btn ios-press${selectedRegion === regionKey ? " active" : ""}`;
+    btn.textContent = regionLabel(regionKey);
+    btn.addEventListener("click", () => { selectedRegion = regionKey; regionBtnEl.textContent = `${regionLabel(regionKey)} ▾`; closeSheet(); renderRegionOptions(); renderHospitalList(); });
+    regionOptionsEl.appendChild(btn);
+  });
+}
+
+const openSheet = () => { regionSheetEl.classList.add("show"); regionSheetEl.setAttribute("aria-hidden", "false"); };
+const closeSheet = () => { regionSheetEl.classList.remove("show"); regionSheetEl.setAttribute("aria-hidden", "true"); };
+function setLoading(){ hospitalListEl.innerHTML = `<article class="status-card"><p class="status-title">正在加载医院数据…</p><p class="status-sub">请稍候。</p></article>`; contentCarouselEl.innerHTML = `<article class="status-card" style="min-width:100%;"><p class="status-title">正在加载推荐内容…</p></article>`; }
+function setLoadError(message){ hospitalListEl.innerHTML = `<article class="status-card"><p class="status-title">数据加载失败</p><p class="status-sub">${esc(message || "请刷新重试")}</p></article>`; }
+async function fetchJson(path){ const res = await fetch(path); if (!res.ok) throw new Error(`${path} 返回状态 ${res.status}`); return await res.json(); }
+
+async function init(){
+  setLoading();
+  renderBell();
+  renderAlertsPanel();
+  try {
+    const [hdb, cdb] = await Promise.all([ fetchJson("./hospitals.json"), fetchJson("./contents.json") ]);
+    allHospitals = safeArr(safeObj(hdb).hospitals).map(normalizeHospital);
+    allContents = safeArr(safeObj(cdb).contents).map(normalizeContent);
+    renderRegionOptions();
+    renderHospitalList();
+    renderContentCarousel();
+  } catch (err) {
+    console.error(err);
+    setLoadError(err.message);
+  }
+}
+
+searchInputEl.addEventListener("focus", () => { if (window.innerWidth < 560) topbarEl.classList.add("searching"); });
+searchInputEl.addEventListener("blur", () => { if (!keyword) topbarEl.classList.remove("searching"); });
+searchInputEl.addEventListener("input", (e) => { keyword = safeStr(e.target.value); clearSearchBtnEl.classList.toggle("show", Boolean(keyword)); renderHospitalList(); });
+clearSearchBtnEl.addEventListener("click", () => { keyword = ""; searchInputEl.value = ""; clearSearchBtnEl.classList.remove("show"); topbarEl.classList.remove("searching"); searchInputEl.focus(); renderHospitalList(); });
+
+bellBtnEl.addEventListener("click", () => {
+  alertPanelEl.classList.toggle("show");
+  if (alertPanelEl.classList.contains("show")) {
+    localStorage.setItem(LS_KEYS.seen, String(getAlerts().length));
+    renderBell();
+    renderAlertsPanel();
+  }
+});
+
+document.addEventListener("click", (e) => {
+  if (!alertPanelEl.contains(e.target) && e.target !== bellBtnEl && !bellBtnEl.contains(e.target)) {
+    alertPanelEl.classList.remove("show");
+  }
+});
+
+regionBtnEl.addEventListener("click", openSheet);
+$("#closeSheetBtn").addEventListener("click", closeSheet);
+regionSheetEl.addEventListener("click", (e) => { if (e.target === regionSheetEl) closeSheet(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeSheet(); alertPanelEl.classList.remove("show"); } });
+
+window.addEventListener("storage", () => { renderBell(); renderHospitalList(); renderAlertsPanel(); });
+init();
+</script>
+</body>
+</html>
