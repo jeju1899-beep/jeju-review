@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-02-16",
+  "contents": [
+    {
+      "id": "c-001",
+      "title_ko": "제주 여행 중 피부과 선택 기준",
+      "title_zh": "济州旅行中选择皮肤科的判断标准",
+      "published_at": "2026-02-16",
+      "thumbnail": null,
+      "body_html": "<p>这是示例文章内容。</p><p>后续你可以在 contents.json 中直接修改 body_html 内容。</p>"
+    },
+    {
+      "id": "c-002",
+      "title_ko": "리프팅 후기 읽는 법",
+      "title_zh": "如何阅读提拉类评价摘要",
+      "published_at": "2026-02-16",
+      "thumbnail": null,
+      "body_html": "<p>这是第二篇示例文章。</p><p>用于测试推荐内容轮播和跳转。</p>"
+    }
+  ]
+}

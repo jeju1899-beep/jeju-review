@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>内容详情</title>
+  <style>
+    :root{--bg:#fff7fb;--text:#111827;--muted:#6b7280;--line:rgba(17,24,39,.10);--shadow:0 10px 26px rgba(17,24,39,.08);--radius:20px;}
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans SC","Apple SD Gothic Neo",Arial,sans-serif;
+      background:
+        radial-gradient(1000px 500px at 15% 0%, #ffe3ec 0%, rgba(255,227,236,0) 60%),
+        radial-gradient(900px 480px at 85% 10%, #ffe9d6 0%, rgba(255,233,214,0) 55%),
+        linear-gradient(180deg,var(--bg) 0%,#ffffff 60%,#ffffff 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{max-width:520px;margin:0 auto;padding:14px 14px 56px;}
+    .card{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;backdrop-filter:blur(6px);}
+    .topbar{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+    .back{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.78);text-decoration:none;color:inherit;font-weight:900;}
+    h1{margin:0;font-size:22px;letter-spacing:-.2px;line-height:1.3;}
+    .meta{margin-top:8px;color:var(--muted);font-weight:800;font-size:13px;line-height:1.6;}
+    .body{margin-top:14px;line-height:1.75;font-size:15px;}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="topbar">
+      <a class="back" href="contents.html">← 返回内容列表</a>
+      <a class="back" href="index.html">← 返回首页</a>
+    </div>
+
+    <article class="card">
+      <h1 id="title">—</h1>
+      <div class="meta" id="meta">—</div>
+      <div class="body" id="body"></div>
+    </article>
+  </main>
+
+  <script>
+    const $ = s => document.querySelector(s);
+
+    function getId(){
+      const p = new URLSearchParams(location.search);
+      return p.get("id") || "";
+    }
+    async function loadContents(){
+      const res = await fetch("./contents.json", { cache:"no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    }
+    function renderNotFound(){
+      $("#title").textContent = "内容不存在";
+      $("#meta").textContent = "找不到对应的文章 id。";
+      $("#body").innerHTML = "<p>请从内容列表重新进入。</p>";
+    }
+
+    (async ()=>{
+      const id = getId();
+      if(!id) return renderNotFound();
+
+      const db = await loadContents();
+      const items = Array.isArray(db.contents) ? db.contents : [];
+      const post = items.find(x => x.id === id);
+
+      if(!post) return renderNotFound();
+
+      $("#title").textContent = post.title_zh || post.title_ko || "—";
+      $("#meta").textContent = (post.published_at || "");
+      $("#body").innerHTML = post.body_html || "<p>—</p>";
+    })();
+  </script>
+</body>
+</html>

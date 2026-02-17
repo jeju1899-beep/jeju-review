@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>推荐内容</title>
+  <style>
+    :root{--bg:#fff7fb;--text:#111827;--muted:#6b7280;--line:rgba(17,24,39,.10);--shadow:0 10px 26px rgba(17,24,39,.08);--radius:20px;}
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans SC","Apple SD Gothic Neo",Arial,sans-serif;
+      background:
+        radial-gradient(1000px 500px at 15% 0%, #ffe3ec 0%, rgba(255,227,236,0) 60%),
+        radial-gradient(900px 480px at 85% 10%, #ffe9d6 0%, rgba(255,233,214,0) 55%),
+        linear-gradient(180deg,var(--bg) 0%,#ffffff 60%,#ffffff 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{max-width:520px;margin:0 auto;padding:14px 14px 56px;}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+    .back{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.78);text-decoration:none;color:inherit;font-weight:900;}
+    h1{margin:0;font-size:22px;letter-spacing:-.2px;}
+    .list{margin-top:12px;display:grid;gap:12px;}
+    .card{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px;text-decoration:none;color:inherit;}
+    .t{font-weight:950;letter-spacing:-.2px;line-height:1.35;}
+    .m{margin-top:6px;color:var(--muted);font-weight:800;font-size:12px;}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="topbar">
+      <a class="back" href="index.html">← 返回首页</a>
+      <div></div>
+    </div>
+
+    <h1>推荐内容</h1>
+
+    <div class="list" id="list"></div>
+  </main>
+
+  <script>
+    const $ = s => document.querySelector(s);
+
+    async function loadContents(){
+      const res = await fetch("./contents.json", { cache:"no-store" });
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    }
+
+    function esc(s){
+      return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    }
+
+    (async ()=>{
+      const db = await loadContents();
+      const items = Array.isArray(db.contents) ? db.contents : [];
+      const el = $("#list");
+      el.innerHTML = "";
+
+      items.forEach(p=>{
+        const a = document.createElement("a");
+        a.className="card";
+        a.href=`post.html?id=${encodeURIComponent(p.id)}`;
+        a.innerHTML = `<div class="t">${esc(p.title_zh||p.title_ko||"—")}</div><div class="m">${esc(p.published_at||"")}</div>`;
+        el.appendChild(a);
+      });
+    })();
+  </script>
+</body>
+</html>

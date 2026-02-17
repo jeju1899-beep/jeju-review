@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>医院详情</title>
+  <style>
+    :root{
+      --bg:#fff7fb; --text:#111827; --muted:#6b7280; --line:rgba(17,24,39,.10);
+      --shadow:0 10px 26px rgba(17,24,39,.08); --radius:20px; --accent:#ff4d6d;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans SC","Apple SD Gothic Neo",Arial,sans-serif;
+      background:
+        radial-gradient(1000px 500px at 15% 0%, #ffe3ec 0%, rgba(255,227,236,0) 60%),
+        radial-gradient(900px 480px at 85% 10%, #ffe9d6 0%, rgba(255,233,214,0) 55%),
+        linear-gradient(180deg,var(--bg) 0%,#ffffff 60%,#ffffff 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{max-width:520px;margin:0 auto;padding:14px 14px 56px;}
+    .card{
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:14px;
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .topbar{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
+    .back{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 12px;border-radius:14px;border:1px solid var(--line);
+      background:rgba(255,255,255,.78);text-decoration:none;color:inherit;font-weight:900;
+    }
+    .title{font-weight:950;letter-spacing:-.2px;font-size:20px;line-height:1.25;margin:0;}
+    .sub{margin-top:8px;color:var(--muted);font-weight:800;font-size:13px;line-height:1.6;}
+    .grid2{display:grid;grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px;}
+    .imgBox{
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      background:rgba(255,255,255,.75);
+    }
+    .imgBox img{width:100%; height:100%; display:block; object-fit:cover;}
+    .logoBox{aspect-ratio: 1/1;}
+    .photoBox{aspect-ratio: 1/1;}
+    .label{
+      position:absolute; margin:10px; padding:6px 10px; border-radius:999px;
+      background:rgba(255,255,255,.86); border:1px solid rgba(17,24,39,.10);
+      font-weight:900; font-size:12px; color:rgba(17,24,39,.75);
+    }
+    .rel{position:relative;}
+    .sectionTitle{margin:0 0 8px; font-weight:950; letter-spacing:-.2px; font-size:16px;}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+    .chip{
+      padding:8px 10px;border-radius:999px;border:1px solid rgba(17,24,39,.10);
+      background:rgba(255,255,255,.75);
+      font-weight:900;font-size:12px;color:rgba(17,24,39,.75);
+    }
+    .tabs{display:flex;gap:8px;margin-top:12px;}
+    .tab{
+      flex:1;
+      padding:10px 10px;
+      border-radius:16px;
+      border:1px solid rgba(17,24,39,.10);
+      background:rgba(255,255,255,.75);
+      font-weight:950;
+      cursor:pointer;
+    }
+    .tab.active{
+      border-color: rgba(255,77,109,.35);
+      box-shadow: 0 10px 22px rgba(255,77,109,.15);
+    }
+    .row3{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px;}
+    .box{
+      border:1px solid rgba(17,24,39,.08);
+      border-radius:18px;
+      background:rgba(255,255,255,.78);
+      padding:12px;
+    }
+    .boxTitle{font-weight:950;letter-spacing:-.2px;margin-bottom:6px;}
+    .ul{margin:8px 0 0 16px; padding:0; color:rgba(17,24,39,.78); font-weight:800; line-height:1.6; font-size:13px;}
+    .warn{
+      border:1px solid rgba(180,83,9,.18);
+      background:#fff7ed;
+      color:#92400e;
+    }
+    .muted{color:var(--muted);}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="topbar">
+      <a class="back" href="index.html">← 返回首页</a>
+      <a class="back" href="contents.html">← 推荐内容</a>
+    </div>
+
+    <section class="card">
+      <h1 class="title" id="name">—</h1>
+      <div class="sub" id="nameZh">—</div>
+      <div class="sub" id="addr">—</div>
+
+      <div class="grid2">
+        <div class="imgBox rel logoBox">
+          <div class="label">Logo</div>
+          <img id="logoImg" alt="logo" />
+        </div>
+        <div class="imgBox rel photoBox">
+          <div class="label">院内照片</div>
+          <img id="photoImg" alt="interior" />
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:12px;">
+      <div class="sectionTitle">AI 摘要（总览）</div>
+      <div class="sub" id="overall">—</div>
+
+      <div class="chips" id="highlights"></div>
+
+      <div class="tabs">
+        <button class="tab active" id="tab-naver" type="button">Naver</button>
+        <button class="tab" id="tab-google" type="button">Google</button>
+        <button class="tab" id="tab-daum" type="button">Daum</button>
+      </div>
+
+      <div class="sub" style="margin-top:10px;" id="platformMeta">—</div>
+
+      <div class="row3">
+        <div class="box">
+          <div class="boxTitle">平台摘要</div>
+          <div class="sub" id="platformSummary">—</div>
+          <div class="chips" id="keywords"></div>
+        </div>
+
+        <div class="box">
+          <div class="boxTitle">常见正向点</div>
+          <ul class="ul" id="pros"></ul>
+        </div>
+
+        <div class="box">
+          <div class="boxTitle">常见需要留意点</div>
+          <ul class="ul" id="cons"></ul>
+        </div>
+
+        <div class="box warn">
+          <div class="boxTitle">阅读注意</div>
+          <ul class="ul" id="cautions"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:12px;">
+      <div class="sectionTitle">说明</div>
+      <div class="sub">
+        本页面为信息理解辅助。内容来自公开评论的整理与摘要。不同个体体验差异较大，请综合阅读多条评论。
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const $ = s => document.querySelector(s);
+
+    function svgDataUri(svg){
+      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+    const dummyLogo = svgDataUri(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="800" height="800">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffe3ec"/>
+            <stop offset="1" stop-color="#fff1d6"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="800" fill="url(#g)"/>
+        <text x="400" y="430" text-anchor="middle"
+          font-family="system-ui, -apple-system, Segoe UI, Roboto"
+          font-size="54" fill="rgba(17,24,39,.45)" font-weight="900">LOGO</text>
+      </svg>
+    `);
+
+    const dummyPhoto = svgDataUri(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="800" height="800">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffe9d6"/>
+            <stop offset="1" stop-color="#ffe3ec"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="800" fill="url(#g)"/>
+        <rect x="90" y="140" width="620" height="520" rx="44"
+          fill="rgba(255,255,255,.72)" stroke="rgba(17,24,39,.10)" stroke-width="6"/>
+        <text x="400" y="430" text-anchor="middle"
+          font-family="system-ui, -apple-system, Segoe UI, Roboto"
+          font-size="44" fill="rgba(17,24,39,.45)" font-weight="900">INTERIOR</text>
+      </svg>
+    `);
+
+    function getId(){
+      const p = new URLSearchParams(location.search);
+      return p.get("id") || "";
+    }
+
+    async function loadHospitals(){
+      const res = await fetch("./hospitals.json", { cache:"no-store" });
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    }
+
+    function setActive(tab){
+      ["naver","google","daum"].forEach(k=>{
+        $("#tab-"+k).classList.toggle("active", k===tab);
+      });
+    }
+
+    function fillList(elId, arr){
+      const el = $(elId);
+      el.innerHTML = "";
+      (Array.isArray(arr) ? arr : []).forEach(x=>{
+        const li = document.createElement("li");
+        li.textContent = x;
+        el.appendChild(li);
+      });
+    }
+
+    function fillChips(elId, arr){
+      const el = $(elId);
+      el.innerHTML = "";
+      (Array.isArray(arr) ? arr : []).forEach(x=>{
+        const span = document.createElement("span");
+        span.className = "chip";
+        span.textContent = x;
+        el.appendChild(span);
+      });
+    }
+
+    function renderPlatform(p){
+      $("#platformMeta").textContent = `${p.source_zh || ""} · ${p.count_hint || ""}`.trim();
+      $("#platformSummary").textContent = p.summary_zh || "—";
+      fillChips("#keywords", p.keywords_zh || []);
+      fillList("#pros", p.pros_zh || []);
+      fillList("#cons", p.cons_zh || []);
+      fillList("#cautions", p.cautions_zh || []);
+    }
+
+    (async ()=>{
+      const id = getId();
+      if(!id){
+        $("#name").textContent = "医院不存在";
+        $("#nameZh").textContent = "缺少 id 参数";
+        $("#addr").textContent = "";
+        $("#logoImg").src = dummyLogo;
+        $("#photoImg").src = dummyPhoto;
+        return;
+      }
+
+      const db = await loadHospitals();
+      const list = Array.isArray(db.hospitals) ? db.hospitals : [];
+      const h = list.find(x => x.id === id);
+
+      if(!h){
+        $("#name").textContent = "医院不存在";
+        $("#nameZh").textContent = "找不到对应 id";
+        $("#addr").textContent = "";
+        $("#logoImg").src = dummyLogo;
+        $("#photoImg").src = dummyPhoto;
+        return;
+      }
+
+      $("#name").textContent = h.name_ko || "—";
+      $("#nameZh").textContent = h.name_zh || "";
+      $("#addr").textContent = h.address_zh || h.address_ko || "";
+
+      const logo = h.assets && h.assets.logo ? h.assets.logo : dummyLogo;
+      const photo = h.assets && h.assets.interior_photo ? h.assets.interior_photo : dummyPhoto;
+      $("#logoImg").src = logo;
+      $("#photoImg").src = photo;
+
+      const rs = h.review_summary || {};
+      $("#overall").textContent = rs.overall_zh || "—";
+      fillChips("#highlights", rs.highlights_zh || []);
+
+      const platforms = (rs.platforms || {});
+      let active = "naver";
+
+      function pick(tab){
+        active = tab;
+        setActive(tab);
+        renderPlatform(platforms[tab] || {});
+      }
+
+      $("#tab-naver").addEventListener("click", ()=>pick("naver"));
+      $("#tab-google").addEventListener("click", ()=>pick("google"));
+      $("#tab-daum").addEventListener("click", ()=>pick("daum"));
+
+      pick(active);
+      document.title = (h.name_zh || h.name_ko || "医院详情");
+    })();
+  </script>
+</body>
+</html>

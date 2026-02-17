@@ -1,0 +1,104 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-02-17",
+  "hospitals": [
+    {
+      "id": "areumd",
+      "region": "jeju-city",
+      "name_ko": "아름다운피부과의원",
+      "name_zh": "아름다운皮肤科",
+      "address_ko": "제주시 노형동 (상세 주소는 추후 입력)",
+      "address_zh": "济州市 老衡洞（地址后续补充）",
+      "assets": {
+        "logo": null,
+        "interior_photo": null
+      },
+      "review_summary": {
+        "overall_zh": "公开评论中常见关键词集中在：沟通是否顺畅、流程是否清晰、复诊与管理是否体系化。以下为按平台整理的倾向摘要。",
+        "highlights_zh": [
+          "沟通与说明：是否解释充分、是否给出可执行的管理建议",
+          "流程体验：等候、预约、动线是否顺畅",
+          "复诊结构：是否有持续管理与随访的感觉"
+        ],
+        "platforms": {
+          "naver": {
+            "source_zh": "Naver 公开评论",
+            "count_hint": "约 320 条",
+            "summary_zh": "倾向于分享过程体验与沟通细节。更常出现对流程与解释的描述。",
+            "keywords_zh": ["说明", "流程", "等待", "管理", "复诊"],
+            "pros_zh": ["沟通说明清楚", "流程相对明确"],
+            "cons_zh": ["高峰时段等待可能增加"],
+            "cautions_zh": ["同一关键词在不同人身上含义不同，建议结合多条评论整体理解"]
+          },
+          "google": {
+            "source_zh": "Google 公开评论",
+            "count_hint": "约 80 条",
+            "summary_zh": "更偏向给出总体评分与简短结论，信息密度较低但能看出总体倾向。",
+            "keywords_zh": ["整体满意度", "沟通", "价格", "体验"],
+            "pros_zh": ["结论直观", "便于快速浏览"],
+            "cons_zh": ["细节较少"],
+            "cautions_zh": ["短评比例高时，建议搭配 Naver 的长评一起看"]
+          },
+          "daum": {
+            "source_zh": "Daum 公开评论",
+            "count_hint": "约 40 条",
+            "summary_zh": "部分评论更像“记录型”，可能包含时间点与具体情境描述。",
+            "keywords_zh": ["记录", "情境", "体验"],
+            "pros_zh": ["情境信息更具体"],
+            "cons_zh": ["样本量可能较小"],
+            "cautions_zh": ["样本少时波动会更明显，不适合单点下结论"]
+          }
+        }
+      }
+    },
+    {
+      "id": "bellemorn",
+      "region": "seogwipo",
+      "name_ko": "벨르몬성형외과의원",
+      "name_zh": "贝勒蒙整形外科（神话世界）",
+      "address_ko": "서귀포시 제주신화월드 랜딩관 인근 (상세 주소는 추후 입력)",
+      "address_zh": "西归浦 济州神话世界 Landing 附近（地址后续补充）",
+      "assets": {
+        "logo": null,
+        "interior_photo": null
+      },
+      "review_summary": {
+        "overall_zh": "公开评论摘要以“沟通、流程、术后管理”三个维度整理。不同平台评论风格不同，建议交叉阅读。",
+        "highlights_zh": [
+          "沟通与期望管理：是否把范围与限制说清楚",
+          "流程体验：咨询到术后是否衔接顺畅",
+          "术后管理：复诊提醒、注意事项是否清晰"
+        ],
+        "platforms": {
+          "naver": {
+            "source_zh": "Naver 公开评论",
+            "count_hint": "约 180 条",
+            "summary_zh": "更容易看到过程与术后管理的叙述，部分会提到沟通与期望值匹配。",
+            "keywords_zh": ["沟通", "术后", "管理", "流程", "恢复"],
+            "pros_zh": ["术后注意事项描述较多", "流程反馈较集中"],
+            "cons_zh": ["个人差异导致体验分化"],
+            "cautions_zh": ["术后恢复速度因人而异，避免把个别案例当普遍结论"]
+          },
+          "google": {
+            "source_zh": "Google 公开评论",
+            "count_hint": "约 70 条",
+            "summary_zh": "评价更短，偏向给出总体满意度。适合快速看趋势。",
+            "keywords_zh": ["满意度", "沟通", "体验"],
+            "pros_zh": ["趋势清晰"],
+            "cons_zh": ["细节不足"],
+            "cautions_zh": ["建议搭配 Naver 长评阅读以获取细节"]
+          },
+          "daum": {
+            "source_zh": "Daum 公开评论",
+            "count_hint": "约 25 条",
+            "summary_zh": "数量可能较少，但可能出现更具体的情境描述。",
+            "keywords_zh": ["记录", "情境", "体验"],
+            "pros_zh": ["细节偶尔更具体"],
+            "cons_zh": ["样本量小"],
+            "cautions_zh": ["样本小会放大个别 경험, 请综合判断"]
+          }
+        }
+      }
+    }
+  ]
+}
